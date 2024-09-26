@@ -1,0 +1,38 @@
+image: golang:1.13  
+
+stages:
+  - build
+  - test
+
+# Build Job
+build-job:
+  stage: build
+  script:
+    - echo "Building the Go application with Go 1.13..."
+    - go mod tidy || true  # Falls 'go mod' in 1.13 nicht verwendet wird, wird der Fehler ignoriert
+    - go build -o go_calculator
+  artifacts:
+    paths:
+      - go_calculator  # Speichert das gebaute Artefakt
+    expire_in: 1 week
+
+# Test Job
+test-job:
+  stage: test
+  script:
+    - echo "Running Go unit tests with Go 1.13..."
+    - go test ./... -v  # Führe alle Tests rekursiv durch
+  artifacts:
+    when: always
+    reports:
+      junit: test-results.xml
+  allow_failure: false
+
+# Lint Job (optional, falls du Linting einbauen möchtest)
+lint-job:
+  stage: test
+  script:
+    - go fmt ./...  # Formatierung prüfen
+    - go vet ./...  # Linting und statische Analyse
+  allow_failure: true  # Dieser Job kann fehlschlagen, ohne die Pipeline zu stoppen
+
