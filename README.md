@@ -25,13 +25,9 @@ Die Anwendung wurde mit Go 1.19 entwickelt und getestet.
 Um das Projekt lokal zu installieren, 
 klone das Repository und führe die Anwendung aus:
 
-```bash
-cd GoCalculator
-go run calculator.go
 
 
-
-zum aufbauen:
+## zum aufbauen:
 
 mkdir GoCalculator
 cd GoCalculator
@@ -41,12 +37,16 @@ go mod tidy
 
 
 
-zum ausführen
+## zum ausführen
 
+```bash
+cd GoCalculator
 go run calculator.go
+```
 
 
+## ausführen der tests:
 
-ausführen der tests:
-
+```bash
 go test
+```
