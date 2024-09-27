@@ -6,7 +6,6 @@ image: golang:1.13
 stages:
   - build
   - test
-  - lint 
   - deploy 
 
 # Build-Job
@@ -37,36 +36,18 @@ unit-test-job:
     # reports:
    #   junit: test-results.xml
 
-
-# # Linting-Job
-# lint-job:
-#   stage: lint
-#   image: golangci/golangci-lint:v1.54.2 # golangci-lint Docker-Image
-#   script:
-#     - echo "Running golangci-lint..."
-#    - golangci-lint run ./... --out-format junit > golangci-lint-report.xml
-#     - golangci-lint run ./... --out-format json > golangci-lint-report.xml  # Verwende JSON-Format
-#    #- golangci-lint run ./... --out-format checkstyle > golangci-lint-report.xml  # Checkstyle Ausgabe
-#   artifacts:
-#     when: always
-#     paths:
-#       - golangci-lint-report.xml
-#     reports:
-#         - golangci-lint-report.json  # Speichere das JSON-Format des Lint-Berichts
-#      # checkstyle: golangci-lint-report.xml  # Checkstyle Report
-
 lint-job:
   image: golangci/golangci-lint:$GOLANGCI_LINT_VERSION
-  stage: lint
+  stage: test
   script:
     # Run golangci-lint and create a code quality report in the Code Climate format
+    - echo "Running golangci-lint..."
     - golangci-lint run --issues-exit-code 0 --print-issued-lines=false --out-format code-climate > gl-code-quality-report.json
   artifacts:
     reports:
       codequality: gl-code-quality-report.json
     paths:
       - gl-code-quality-report.json
-
 
 
 
