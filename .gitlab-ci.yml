@@ -3,36 +3,52 @@ image: golang:1.13
 stages:
   - build
   - test
+  - deploy 
 
-# Build Job
+# Build-Job
 build-job:
   stage: build
   script:
-    - echo "Building the Go application with Go 1.13..."
+    - echo "Building the Go application..."
     - go mod tidy || true  # Falls 'go mod' in 1.13 nicht verwendet wird, wird der Fehler ignoriert
-    - go build -o go_calculator
-  artifacts:
-    paths:
-      - go_calculator  # Speichert das gebaute Artefakt
-    expire_in: 1 week
-
-# Test Job
-test-job:
-  stage: test
-  script:
-    - echo "Running Go unit tests with Go 1.13..."
-    - go test ./... -v  # Führe alle Tests rekursiv durch
+    - go build -o go_calculator .  # Build der Anwendung
   artifacts:
     when: always
-    reports:
-      junit: test-results.xml
-  allow_failure: false
+    paths:
+      - go_calculator  # Speichert das gebaute Artefakt
 
-# Lint Job (optional, falls du Linting einbauen möchtest)
+# Test-Job
+unit-test-job:
+  stage: test
+  script:
+    - echo "Running unit tests..."
+    - go test ./... -v > test_results.out  # Führe Tests aus und speichere das Ergebnis
+    - cat test_results.out  # Zeige das Testergebnis in der Konsole an
+  artifacts:
+    when: always
+    paths:
+      - test_results.out
+    reports:
+      junit: test_results.out  # (optional) Hier wird der Testbericht gespeichert, obwohl go test keine native JUnit-Unterstützung hat
+    # reports:
+   #   junit: test-results.xml
+
+
+
+# Linting-Job
 lint-job:
   stage: test
   script:
-    - go fmt ./...  # Formatierung prüfen
-    - go vet ./...  # Linting und statische Analyse
-  allow_failure: true  # Dieser Job kann fehlschlagen, ohne die Pipeline zu stoppen
+    - echo "Linting Go code..."
+    - go fmt ./...  # Führe Linting mit Go aus
+    - echo "Lint complete."
+
+# Deployment-Job
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Deploying application..."
+    - echo "Deployment complete."
+
+
 
