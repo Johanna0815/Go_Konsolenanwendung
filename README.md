@@ -18,7 +18,7 @@ von GitLab CI/CD zu demonstrieren.
 
 ## Voraussetzungen
 
-Die Anwendung wurde mit Go 1.19 entwickelt und getestet.
+Die Anwendung wurde mit Go 1.13 entwickelt und getestet.
 
 ## Lokale Installation
 
