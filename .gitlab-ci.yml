@@ -3,6 +3,7 @@ image: golang:1.13
 stages:
   - build
   - test
+  - lint 
   - deploy 
 
 # Build-Job
@@ -34,14 +35,20 @@ unit-test-job:
    #   junit: test-results.xml
 
 
-
 # Linting-Job
 lint-job:
-  stage: test
+  stage: lint
+  image: golangci/golangci-lint:v1.54.2 # golangci-lint Docker-Image
   script:
-    - echo "Linting Go code..."
-    - go fmt ./...  # Führe Linting mit Go aus
-    - echo "Lint complete."
+    - echo "Running golangci-lint..."
+    - golangci-lint run ./... --out-format junit > golangci-lint-report.xml
+  artifacts:
+    when: always
+    paths:
+      - golangci-lint-report.xml
+    reports:
+      junit: golangci-lint-report.xml  # Bericht hochlade. 
+
 
 # Deployment-Job
 deploy-job:
