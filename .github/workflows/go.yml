@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,7 +33,8 @@ jobs:
           path: go_calculator
 
   test:
-    runs-on: ubuntu-latest
+    needs: build
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -55,7 +56,8 @@ jobs:
           path: test_results.out
 
   lint:
-    runs-on: ubuntu-latest
+    needs: test
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -73,3 +75,16 @@ jobs:
         with:
           name: code-quality-report
           path: gl-code-quality-report.json
+
+  deploy:
+    needs: [build, test, lint]
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying application..."
+          echo "Application successfully deployed."
