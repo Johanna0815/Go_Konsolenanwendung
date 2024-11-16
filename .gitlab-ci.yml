@@ -6,6 +6,7 @@ image: golang:1.13
 stages:
   - build
   - test
+  - lint
   - deploy 
 
 # Build-Job
@@ -38,7 +39,7 @@ unit-test-job:
 
 lint-job:
   image: golangci/golangci-lint:$GOLANGCI_LINT_VERSION
-  stage: test
+  stage: lint
   script:
     # Run golangci-lint and create a code quality report in the Code Climate format
     - echo "Running golangci-lint..."
