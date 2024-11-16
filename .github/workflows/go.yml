@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -62,9 +63,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up golangci-lint
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.13'
+
+      - name: Install golangci-lint
         run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin ${{ github.event.inputs.GOLANGCI_LINT_VERSION }}
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
 
       - name: Run golangci-lint
         run: |
